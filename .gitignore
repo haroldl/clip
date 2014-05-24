@@ -1,0 +1,7 @@
+*.hi
+*.o
+clip
+dist/
+Lexer.hs
+Parser.hs
+Parser.info
