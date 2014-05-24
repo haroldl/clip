@@ -1,15 +1,19 @@
 clip
 ====
 
-clip is an aspiring Python implementation written in Haskell that generates Common Lisp which can then be compiled to, say, x86 machine code. The premise is that Python as a language is a subset of Common Lisp, and that since there are already sophisticated compilers available for Common Lisp we should be able to piggyback on their hard work in order to improve performance of Python programs over interpreters or byte code execution.
-
-Programming languages aren't slow, implementations are. Neither are programming languages interpreted or compiled, implementations are.
+clip is an aspiring Python implementation written in Haskell that generates
+Common Lisp which can then be compiled to, say, x86 machine code. The premise is
+that Python as a language is a subset of Common Lisp, and that since there are
+already sophisticated compilers available for Common Lisp we should be able to
+piggyback on their hard work in order to improve performance of Python programs
+over interpreters or byte code execution.
 
 Wins
 ====
 
 * Tail call optimization
 * Native machine code execution
+* Multi-threaded code with no GIL
 
 Flow
 ====
@@ -31,19 +35,19 @@ Flow
         V
      x86 binary:
 
-     ; 11B0168A:       8B55FC           MOV EDX, [EBP-4]           ; no-arg-parsing entry point
-     ;       8D:       BF08000000       MOV EDI, 8
-     ;       92:       E8B9EA4FF2       CALL #x4000150             ; GENERIC-+
-     ;       97:       7302             JNB L0
-     ;       99:       8BE3             MOV ESP, EBX
-     ;       9B: L0:   8BE5             MOV ESP, EBP
-     ;       9D:       F8               CLC
-     ;       9E:       5D               POP EBP
-     ;       9F:       C3               RET
-     ;       A0:       0F0B0A           BREAK 10                   ; error trap
-     ;       A3:       02               BYTE #X02
-     ;       A4:       18               BYTE #X18                  ; INVALID-ARG-COUNT-ERROR
-     ;       A5:       4F               BYTE #X4F                  ; ECX
+     ; 8A:       8B55FC           MOV EDX, [EBP-4]   ; no-arg-parsing entry point
+     ; 8D:       BF08000000       MOV EDI, 8
+     ; 92:       E8B9EA4FF2       CALL #x4000150     ; GENERIC-+
+     ; 97:       7302             JNB L0
+     ; 99:       8BE3             MOV ESP, EBX
+     ; 9B: L0:   8BE5             MOV ESP, EBP
+     ; 9D:       F8               CLC
+     ; 9E:       5D               POP EBP
+     ; 9F:       C3               RET
+     ; A0:       0F0B0A           BREAK 10           ; error trap
+     ; A3:       02               BYTE #X02
+     ; A4:       18               BYTE #X18          ; INVALID-ARG-COUNT-ERROR
+     ; A5:       4F               BYTE #X4F          ; ECX
 
 Example
 -
