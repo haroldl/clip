@@ -94,8 +94,8 @@ Common Lisp has separate namespaces for most variables and functions
 
 Quick fix: bind every function/method in both namespaces, e.g.
 
-(defun f ...)
-(setf f #'f)
+    (defun f ...)
+    (setf f #'f)
 
 Now you can pass "f" as a parameter to other functions without knowing
 whether it is a function or not.
@@ -105,11 +105,11 @@ Decorators
 
 Ideas:
 
-(let ((tmp-function-name (gensym)))
-  (setf (symbol-function tmp-function-name) (lambda ...))
-  (setf (symbol-function 'real-function-name (decorator #'tmp-function-name))))
+    (let ((tmp-function-name (gensym)))
+      (setf (symbol-function tmp-function-name) (lambda ...))
+      (setf (symbol-function 'real-function-name (decorator #'tmp-function-name))))
 
 or
 
-(flet ((tmp-function-name ...))
-  (setf (symbol-function 'real-function-name (decorator #'tmp-function-name))))
+    (flet ((tmp-function-name ...))
+      (setf (symbol-function 'real-function-name (decorator #'tmp-function-name))))
