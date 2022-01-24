@@ -5,3 +5,4 @@ dist/
 Lexer.hs
 Parser.hs
 Parser.info
+.stack-work/

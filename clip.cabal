@@ -17,5 +17,5 @@ cabal-version:       >=1.8
 executable clip
   main-is:             Main.hs
   other-modules:       Lexer, Parser
-  build-depends:       base ==4.6.*, array ==0.4.*, HUnit ==1.2.*
+  build-depends:       base ==4.14.*, array ==0.5.*, HUnit ==1.6.*
   build-tools:         alex, happy
