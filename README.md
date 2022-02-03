@@ -113,3 +113,27 @@ or
 
     (flet ((tmp-function-name ...))
       (setf (symbol-function 'real-function-name (decorator #'tmp-function-name))))
+
+
+Implementation Notes
+-
+
+For bit shift operations: `#'ash`
+
+```
+* (ash -1 -4)
+-1
+* (ash 2 34)
+34359738368
+* (ash 2 145)
+89202980794122492566142873090593446023921664
+```
+
+```
+>>> -1 >> 4
+-1
+>>> 2 << 34
+34359738368
+>>> 2 << 145
+89202980794122492566142873090593446023921664
+```

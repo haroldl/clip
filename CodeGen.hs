@@ -27,6 +27,7 @@ contextName (Class name) = name
 codegen :: [Context] -> Expr -> String
 codegen ctx T = "t"
 codegen ctx Nil = "nil"
+codegen ctx NoOp = "nil"
 codegen ctx (Assign dests vals) = "(psetf " ++ (codegenSeveral ctx dests) ++ " " ++ (codegenSeveral ctx vals) ++ ")"
 codegen ctx (VariableRef name) = name
 codegen ctx (Literal value) = value

@@ -346,17 +346,17 @@ CompOp: '<' { \es -> simpleCall "<" es }
       | is not { \es -> ToDo }
 
 Expr: XorExpr { $1 }
-    | XorExpr '|' Expr { ToDo }
+    | XorExpr '|' Expr { simpleCall "logior" [$1, $3] }
 
 XorExpr: AndExpr { $1 }
-       | AndExpr '^' XorExpr { ToDo }
+       | AndExpr '^' XorExpr { simpleCall "logxor" [$1, $3] }
 
 AndExpr: ShiftExpr { $1 }
-       | ShiftExpr '&' AndExpr { ToDo }
+       | ShiftExpr '&' AndExpr { simpleCall "logand" [$1, $3] }
 
 ShiftExpr: ArithExpr { $1 }
-         | ArithExpr '<<' ShiftExpr { ToDo }
-         | ArithExpr '>>' ShiftExpr { ToDo }
+         | ArithExpr '<<' ShiftExpr { simpleCall "ash" [$1, $3]  }
+         | ArithExpr '>>' ShiftExpr { simpleCall "ash" [$1, negateNumber $3] }
 
 ArithExpr: Term { $1 }
          | Term '+' ArithExpr { simpleCall "+" [$1, $3] }
@@ -502,7 +502,14 @@ YieldExpr: yield { ToDo }
 
 {
 
+simpleCall :: String -> [Expr] -> Expr
 simpleCall name args = ApplyFun (Literal name) (Params args Nothing Nothing)
+
+negateNumber :: Expr -> Expr
+negateNumber n = case n of
+  Literal ('-' : rest) -> Literal rest
+  Literal n -> Literal $ '-' : n
+  _ -> simpleCall "-" [n]
 
 buildBlock [] = NoOp
 buildBlock (e:[]) = e
