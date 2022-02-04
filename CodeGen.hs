@@ -49,9 +49,21 @@ genArgs ctx (Params positional varargs kwargs) = unwords (map (genParam ctx) pos
                 Just name -> " name"
         kw = "" -- TODO
 
-genParams ctx (Params positional varargs kwargs) = unwords (map (genParam ctx) positional) ++ genVarargs varargs ++ genKwargs kwargs
+genParams ctx (Params positional varargs kwargs) = genPositionalParams ctx False positional ++ genVarargs varargs ++ genKwargs kwargs
 
-genParam ctx (Param (Just (Literal name)) _) = name
+-- The boolean flag indicates whether or not we have added the &optional marker yet.
+genPositionalParams :: [Context] -> Bool -> [Expr] -> String
+genPositionalParams _ _ [] = ""
+genPositionalParams ctx True ps = unwords $ map (genParam ctx) ps
+genPositionalParams ctx False (p:ps) | isOptionalParam p = " &optional " ++ (genPositionalParams ctx True (p:ps))
+genPositionalParams ctx False (p:ps) = (genParam ctx p) ++ (genPositionalParams ctx False ps)
+
+isOptionalParam :: Expr -> Bool
+isOptionalParam (Param (Just _) (Just _)) = True
+isOptionalParam _ = False
+
+genParam ctx (Param (Just (Literal name)) Nothing) = name
+genParam ctx (Param (Just (Literal name)) (Just expr)) = "(" ++ name ++ " " ++ (codegen ctx expr) ++ ")"
 genParam ctx (Param Nothing (Just (Literal value))) = value
 genParam ctx (Param Nothing (Just expr)) = codegen ctx expr
 genParam ctx (VariableRef name) = name
